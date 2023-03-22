@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 public class Sorter{
     private static final int CHUNK_SIZE = 3;
@@ -61,40 +60,62 @@ public class Sorter{
 
     private  File mergeTwoFiles(File file1, File file2) throws IOException {
         File mergedFile = File.createTempFile("result", ".txt");
-        try(Scanner scanner1 = new Scanner(new FileReader(file1));
-            Scanner scanner2 = new Scanner(new FileReader(file2));
+        try(BufferedReader bufferedReader1 = new BufferedReader(new FileReader(file1));
+            BufferedReader bufferedReader2 = new BufferedReader(new FileReader(file2));
             BufferedWriter writer = new BufferedWriter(new FileWriter(mergedFile))){
-            long longFile1 = scanner1.nextLong();
-            long longFile2 = scanner2.nextLong();
-            while (scanner1.hasNextLong() || scanner2.hasNextLong()) {
-
-                if(scanner1.hasNextLong() && scanner2.hasNextLong()){
-                    if (longFile1 <= longFile2){
-                        writer.write(Long.toString(longFile1));
+            String line1 = bufferedReader1.readLine();
+            String line2 = bufferedReader2.readLine();
+            boolean stopRead1 = false;
+            boolean stopRead2 = false;
+            while (!(stopRead1 && stopRead2)){
+                if(!(stopRead1 || stopRead2)) {
+                    if (line1.equals(line2)) {
+                        writer.write(line1);
+                        writer.write(line2);
+                        line1 = bufferedReader1.readLine();
+                        if (line1 == null) {
+                            stopRead1 = true;
+                        }
+                        line2 = bufferedReader2.readLine();
+                        if (line2 == null) {
+                            stopRead2 = true;
+                        }
+                    } else if (Long.parseLong(line1) < Long.parseLong(line2)) {
+                        writer.write(line1);
                         writer.newLine();
-                        longFile1 = scanner1.nextLong();
-                    }
-                    else {
-                        writer.write(Long.toString(longFile2));
+                        line1 = bufferedReader1.readLine();
+                        if (line1 == null) {
+                            stopRead1 = true;
+                        }
+                    } else {
+                        writer.write(line2);
                         writer.newLine();
-                        longFile2 = scanner1.nextLong();
+                        line2 = bufferedReader2.readLine();
+                        if (line2 == null) {
+                            stopRead2 = true;
+                        }
                     }
-                }else if (scanner1.hasNextLong()){
-                    longFile1 = scanner1.nextLong();
-                    writer.write(Long.toString(longFile1));
+                } else if(!stopRead1){
+                    writer.write(line1);
                     writer.newLine();
-                }else if (scanner2.hasNextLong()){
-                    longFile2 = scanner2.nextLong();
-                    writer.write(Long.toString(longFile2));
+                    line1 = bufferedReader1.readLine();
+                    if (line1 == null) {
+                        stopRead1 = true;
+                    }
+                } else if (!stopRead2){
+                    writer.write(line2);
                     writer.newLine();
+                    line2 = bufferedReader2.readLine();
+                    if (line2 == null) {
+                        stopRead2 = true;
+                    }
                 }
             }
-            file1.delete();
-            file2.delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        file1.delete();
+        file2.delete();
         return mergedFile;
     }
-
 }
