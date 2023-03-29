@@ -6,6 +6,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import io.ylab.intensive.lesson04.DbUtil;
 import io.ylab.intensive.lesson04.RabbitMQUtil;
+import io.ylab.intensive.lesson04.eventsourcing.Person;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -24,11 +25,19 @@ public class ApiApp {
       channel.queueDeclare(queueName, true, false, false, null);
       channel.queueBind(queueName, exchangeName, "*");
 
-      PersonApiImpl personApi = new PersonApiImpl(exchangeName, channel, dataSource);
-      personApi.savePerson(1L,"abc", "123", "ABC");
-      personApi.savePerson(2L,"qwe", "456", "QWE");
-      personApi.savePerson(3L,"rty", "789", "RTY");
-      personApi.findAll();
+      PersonApiImpl personApi = new PersonApiImpl(exchangeName,channel, dataSource);
+      personApi.savePerson(1L, "A", "1", "a");
+      personApi.savePerson(2L, "B", "2", "b");
+      personApi.savePerson(3L, "B", "3", "c");
+      personApi.savePerson(4L, "C", "4", "d");
+      personApi.savePerson(5L, "D", "5", "e");
+      personApi.deletePerson(1L);
+      for(Person person: personApi.findAll()){
+        System.out.println(person.getId());
+        System.out.println(person.getName());
+        System.out.println(person.getMiddleName());
+        System.out.println(person.getLastName());
+      }
     }
   }
 
