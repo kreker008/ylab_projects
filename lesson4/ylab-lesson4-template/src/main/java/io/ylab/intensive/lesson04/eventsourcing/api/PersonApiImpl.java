@@ -40,7 +40,7 @@ public class PersonApiImpl implements PersonApi {
         person.setId(personId);
         Message message = new Message(Operation.DELETE, person);
         try{
-            this.channel.basicPublish("", this.exchangeName, null, objectMapper.writeValueAsBytes(message));
+            this.channel.basicPublish(this.exchangeName, "*", null, objectMapper.writeValueAsBytes(message));
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -55,7 +55,7 @@ public class PersonApiImpl implements PersonApi {
       person.setLastName(lastName);
       Message message = new Message(Operation.SAVE, person);
       try{
-          this.channel.basicPublish(this.exchangeName, "key", null, objectMapper.writeValueAsBytes(message));
+          this.channel.basicPublish(this.exchangeName, "*", null, objectMapper.writeValueAsBytes(message));
       } catch (IOException e){
           e.printStackTrace();
       }
