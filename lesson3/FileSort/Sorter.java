@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Sorter{
-    private static final int CHUNK_SIZE = 3;
+    private static final int CHUNK_SIZE = 100;
 
     public  File sortFile(File dataFile) throws IOException {
         List<File> tempFiles = new ArrayList<>();
