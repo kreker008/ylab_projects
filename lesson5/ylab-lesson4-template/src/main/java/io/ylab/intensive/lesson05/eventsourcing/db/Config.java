@@ -1,6 +1,8 @@
 package io.ylab.intensive.lesson05.eventsourcing.db;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 
 import com.rabbitmq.client.ConnectionFactory;
@@ -21,7 +23,7 @@ public class Config {
 
     String ddl = ""
                      + "drop table if exists person;"
-                     + "create if not exists table person (\n"
+                     + "create table if not exists  person (\n"
                      + "person_id bigint primary key,\n"
                      + "first_name varchar,\n"
                      + "last_name varchar,\n"
@@ -41,6 +43,13 @@ public class Config {
     connectionFactory.setPassword("guest");
     connectionFactory.setVirtualHost("/");
     return connectionFactory;
+  }
+
+  @Bean
+  public Map<String, String> configure(){
+    Map<String,String> map = new HashMap<>();
+    map.put("queueName", "queue");
+    return map;
   }
   
 }
