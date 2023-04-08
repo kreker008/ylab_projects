@@ -7,9 +7,11 @@ import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ComponentScan("io.ylab.intensive.lesson05.messagefilter")
+@PropertySource("classpath:application.properties")
 public class Config {
   
   @Bean
